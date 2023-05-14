@@ -1,0 +1,24 @@
+<header class="md:hidden flex  bg-slate-50 drop-shadow-md h-20 items-center">
+  <.sidebar_link href={~p"/"} active={@current_uri == "/"}>
+    <Heroicons.home class="w-full h-full" />
+  </.sidebar_link>
+  <.sidebar_link href={~p"/transport"} active={@current_uri == "/transport"}>
+    <.bus_icon />
+  </.sidebar_link>
+</header>
+<main class="flex md:pl-20">
+  <aside class="w-20 left-0 drop-shadow-md hidden md:flex flex-col fixed  h-[100vh] bg-slate-50">
+    <.sidebar_link href={~p"/"} active={@current_uri == "/"}>
+      <Heroicons.home class="w-full h-full" />
+    </.sidebar_link>
+    <.sidebar_link href={~p"/transport"} active={@current_uri == "/transport"}>
+      <.bus_icon />
+    </.sidebar_link>
+  </aside>
+  <div class="mx-auto max-w-2xl  ">
+    <.flash_group flash={@flash} />
+    <div class="mt-10">
+      <%= @inner_content %>
+    </div>
+  </div>
+</main>
