@@ -30,7 +30,6 @@ defmodule HomeviewWeb.TransportLive do
       <div class=" divide-y divide-slate-400/25 ">
         <.table_row
           :for={stop <- @stops}
-          class="text-center"
           number={stop.number}
           destination={stop.displayName}
           departure={stop.expectedDepartureTime}

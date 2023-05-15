@@ -1,6 +1,5 @@
 defmodule HomeviewWeb.Clock do
   use HomeviewWeb, :live_component
-  import Timex
 
   def render(assigns) do
     ~H"""

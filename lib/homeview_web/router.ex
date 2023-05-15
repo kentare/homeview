@@ -24,6 +24,7 @@ defmodule HomeviewWeb.Router do
     ) do
       live("/", MainLive)
       live("/transport", TransportLive)
+      live("/weather", WeatherForecastLive)
     end
   end
 

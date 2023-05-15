@@ -94,7 +94,7 @@ defmodule Homeview.Transport.Stops do
     |> case do
       x when x < 60 -> "Nå"
       x when x < 600 -> "#{x |> div(60)} min"
-      x -> format(time)
+      _ -> format(time)
     end
   end
 
