@@ -3,7 +3,7 @@ defmodule HomeviewWeb.Clock do
 
   def render(assigns) do
     ~H"""
-    <div class="w-full text-center mb-4 text-5xl">
+    <div class="w-full text-center mb-4 text-5xl max-w-full">
       <%= @time %>
     </div>
     """

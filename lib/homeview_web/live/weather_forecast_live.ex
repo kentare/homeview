@@ -18,7 +18,8 @@ defmodule HomeviewWeb.WeatherForecastLive do
 
   def render(assigns) do
     ~H"""
-    <div class="max-w-full h-full px-2">
+    <.live_component assigns id="clock" module={HomeviewWeb.Clock} time={@time} />
+    <div class="px-2 w-full overflow-x-auto center-child-svg">
       <%= raw(@forecast) %>
     </div>
     """
