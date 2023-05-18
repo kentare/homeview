@@ -65,6 +65,7 @@ defmodule HomeviewWeb.Router do
       ] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/users/register", UserRegistrationLive, :new
     end
   end
 
@@ -76,7 +77,6 @@ defmodule HomeviewWeb.Router do
         {HomeviewWeb.UserAuth, :redirect_if_user_is_authenticated},
         {HomeviewWeb.SaveRequestUri, :save_request_uri}
       ] do
-      live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
