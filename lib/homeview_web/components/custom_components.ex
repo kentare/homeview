@@ -10,7 +10,7 @@ defmodule HomeviewWeb.CustomComponents do
     ~H"""
     <.link
       {@rest}
-      href={@href}
+      patch={@href}
       class={"w-20 h-20 px-3 py-6 flex-grow flex justify-center items-center " <> (if @active, do: "bg-slate-300 shadow-inner", else: "")}
     >
       <%= render_slot(@inner_block) %>

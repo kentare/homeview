@@ -35,7 +35,7 @@ defmodule Homeview.Transport.StopsTest do
         platformNumber: "1",
         displayName: "Mortensrud",
         aimedDepartureTime: "2023-05-12T08:53:00+02:00",
-        expectedDepartureTime: "2023-05-12T08:53:00+02:00",
+        expectedDepartureTime: Stops.format_time("2023-05-12T08:53:00+02:00"),
         cancelled: false,
         mode: "metro"
       }
@@ -101,7 +101,7 @@ defmodule Homeview.Transport.StopsTest do
           platformNumber: "1",
           displayName: "Mortensrud",
           aimedDepartureTime: "2023-05-12T08:53:00+02:00",
-          expectedDepartureTime: "2023-05-12T08:53:00+02:00",
+          expectedDepartureTime: Stops.format_time("2023-05-12T08:53:00+02:00"),
           cancelled: false,
           mode: "metro"
         },
@@ -110,7 +110,7 @@ defmodule Homeview.Transport.StopsTest do
           platformNumber: "D",
           displayName: "Gullhaug",
           aimedDepartureTime: "2023-05-12T08:57:00+02:00",
-          expectedDepartureTime: "2023-05-12T08:57:00+02:00",
+          expectedDepartureTime: Stops.format_time("2023-05-12T08:57:00+02:00"),
           cancelled: false,
           mode: "bus"
         }
@@ -126,7 +126,7 @@ defmodule Homeview.Transport.StopsTest do
           platformNumber: "1",
           displayName: "Mortensrud",
           aimedDepartureTime: "2023-05-12T08:53:00+02:00",
-          expectedDepartureTime: "2023-05-12T08:53:00+02:00",
+          expectedDepartureTime: Stops.format_time("2023-05-12T08:53:00+02:00"),
           cancelled: false,
           mode: "metro"
         },
@@ -135,7 +135,7 @@ defmodule Homeview.Transport.StopsTest do
           platformNumber: "D",
           displayName: "Gullhaug",
           aimedDepartureTime: "2023-05-12T08:57:00+02:00",
-          expectedDepartureTime: "2023-05-12T08:57:00+02:00",
+          expectedDepartureTime: Stops.format_time("2023-05-12T08:57:00+02:00"),
           cancelled: false,
           mode: "bus"
         }
@@ -147,7 +147,7 @@ defmodule Homeview.Transport.StopsTest do
           platformNumber: "1",
           displayName: "Mortensrud",
           aimedDepartureTime: "2023-05-12T08:53:00+02:00",
-          expectedDepartureTime: "2023-05-12T08:53:00+02:00",
+          expectedDepartureTime: Stops.format_time("2023-05-12T08:53:00+02:00"),
           cancelled: false,
           mode: "metro"
         }
