@@ -4,7 +4,16 @@ defmodule HomeviewWeb.Clock do
   def render(assigns) do
     ~H"""
     <div class="w-full text-center mb-4 text-5xl max-w-full">
-      <%= @time %>
+      <noscript>
+        <div class="text-sm text-slate-500">
+          Du har javascript avslått, så innholdet vil ikke oppdatere seg automatisk. trykk F5 for oppdatert innhold.
+        </div>
+        
+        <div class="text-sm text-slate-500 underline">
+          Sist oppdatert
+        </div>
+      </noscript>
+       <%= @time %>
     </div>
     """
   end
