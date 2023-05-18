@@ -9,6 +9,11 @@
   <.sidebar_link href={~p"/weather"} active={@current_uri == "/weather"}>
     <Heroicons.sun class="h-full w-full" />
   </.sidebar_link>
+  <%= if @current_user do %>
+    <.sidebar_link href={~p"/shopping"} active={@current_uri == "/shopping"}>
+      <Heroicons.shopping_cart />
+    </.sidebar_link>
+  <% end %>
 </header>
 <main class="flex md:pl-20 overflow-x-hidden overflow-y-hidden">
   <aside class="w-20 left-0 drop-shadow-md hidden md:flex flex-col fixed  h-[100vh] bg-slate-50">
@@ -21,10 +26,16 @@
     <.sidebar_link href={~p"/weather"} active={@current_uri == "/weather"}>
       <Heroicons.sun />
     </.sidebar_link>
+
+    <%= if @current_user do %>
+      <.sidebar_link href={~p"/shopping"} active={@current_uri == "/shopping"}>
+        <Heroicons.shopping_cart />
+      </.sidebar_link>
+    <% end %>
   </aside>
   <div class="mx-auto md:max-w-2xl xl:max-w-7xl w-full ">
     <.flash_group flash={@flash} />
-    <div class="mt-10 w-full">
+    <div class="mt-10 w-full px-2">
       <%= @inner_content %>
     </div>
   </div>
