@@ -5,11 +5,14 @@ defmodule HomeviewWeb.Clock do
     ~H"""
     <div class="w-full text-center mb-4 text-5xl max-w-full">
       <noscript>
-        <div class="text-sm text-slate-500">
-          Du har javascript avslått, så innholdet vil ikke oppdatere seg automatisk. trykk F5 for oppdatert innhold.
+        <div class="text-sm text-slate-500 flex gap-1 flex-wrap justify-center">
+          Du har javascript avslått, så innholdet vil ikke oppdatere seg automatisk.
+          <form action="">
+            <button type="submit">Klikk her for å oppdatere</button>
+          </form>
         </div>
         
-        <div class="text-sm text-slate-500 underline">
+        <div class="text-sm text-slate-500 underline mt-2">
           Sist oppdatert
         </div>
       </noscript>
