@@ -65,7 +65,23 @@ defmodule HomeviewWeb.Router do
       ] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-      live "/users/register", UserRegistrationLive, :new
+      # live "/users/register", UserRegistrationLive, :new
+
+      # Chores
+      live "/chores", ChoreLive.Index, :index
+      live "/chores/new", ChoreLive.Index, :new
+      live "/chores/:id/edit", ChoreLive.Index, :edit
+
+      live "/chores/:id", ChoreLive.Show, :show
+      live "/chores/:id/show/edit", ChoreLive.Show, :edit
+
+      # Chore history
+      live "/chore_histories", ChoreHistoryLive.Index, :index
+      live "/chore_histories/new", ChoreHistoryLive.Index, :new
+      live "/chore_histories/:id/edit", ChoreHistoryLive.Index, :edit
+
+      live "/chore_histories/:id", ChoreHistoryLive.Show, :show
+      live "/chore_histories/:id/show/edit", ChoreHistoryLive.Show, :edit
     end
   end
 
@@ -80,6 +96,7 @@ defmodule HomeviewWeb.Router do
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
+      live "/users/register", UserRegistrationLive, :new
     end
 
     post "/users/log_in", UserSessionController, :create

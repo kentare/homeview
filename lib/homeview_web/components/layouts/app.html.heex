@@ -10,8 +10,8 @@
     <Heroicons.sun class="h-full w-full" />
   </.sidebar_link>
   <%= if @current_user do %>
-    <.sidebar_link href={~p"/shopping"} active={@current_uri == "/shopping"}>
-      <Heroicons.shopping_cart />
+    <.sidebar_link href={~p"/chores"} active={@current_uri == "/chores"}>
+      <Heroicons.trophy class="h-full w-full" />
     </.sidebar_link>
   <% end %>
 </header>
@@ -28,14 +28,15 @@
     </.sidebar_link>
 
     <%= if @current_user do %>
-      <.sidebar_link href={~p"/shopping"} active={@current_uri == "/shopping"}>
-        <Heroicons.shopping_cart />
+      <.sidebar_link href={~p"/chores"} active={@current_uri == "/chores"}>
+        <Heroicons.trophy />
       </.sidebar_link>
     <% end %>
   </aside>
   <div class="mx-auto md:max-w-2xl xl:max-w-7xl w-full ">
     <.flash_group flash={@flash} />
     <div class="mt-10 w-full px-2">
+      <.live_component assigns id="clock" module={HomeviewWeb.Clock} />
       <%= @inner_content %>
     </div>
   </div>

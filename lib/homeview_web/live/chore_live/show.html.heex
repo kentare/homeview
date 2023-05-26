@@ -1,0 +1,28 @@
+<.header>
+  Chore <%= @chore.id %>
+  <:subtitle>This is a chore record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/chores/#{@chore}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit chore</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @chore.name %></:item>
+  <:item title="Time interval"><%= @chore.time_interval %></:item>
+  <:item title="Iconurl"><%= @chore.iconUrl %></:item>
+</.list>
+
+<.back navigate={~p"/chores"}>Back to chores</.back>
+
+<.modal :if={@live_action == :edit} id="chore-modal" show on_cancel={JS.patch(~p"/chores/#{@chore}")}>
+  <.live_component
+    module={HomeviewWeb.ChoreLive.FormComponent}
+    id={@chore.id}
+    title={@page_title}
+    action={@live_action}
+    chore={@chore}
+    patch={~p"/chores/#{@chore}"}
+  />
+</.modal>

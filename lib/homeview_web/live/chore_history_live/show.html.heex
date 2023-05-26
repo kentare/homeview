@@ -1,0 +1,26 @@
+<.header>
+  Chore history <%= @chore_history.id %>
+  <:subtitle>This is a chore_history record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/chore_histories/#{@chore_history}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit chore_history</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Completed date"><%= @chore_history.completed_date %></:item>
+</.list>
+
+<.back navigate={~p"/chore_histories"}>Back to chore_histories</.back>
+
+<.modal :if={@live_action == :edit} id="chore_history-modal" show on_cancel={JS.patch(~p"/chore_histories/#{@chore_history}")}>
+  <.live_component
+    module={HomeviewWeb.ChoreHistoryLive.FormComponent}
+    id={@chore_history.id}
+    title={@page_title}
+    action={@live_action}
+    chore_history={@chore_history}
+    patch={~p"/chore_histories/#{@chore_history}"}
+  />
+</.modal>

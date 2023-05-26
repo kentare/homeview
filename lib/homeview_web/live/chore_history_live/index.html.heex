@@ -1,0 +1,46 @@
+<.header>
+  Listing Chore histories
+  <:actions>
+    <.link patch={~p"/chore_histories/new"}>
+      <.button>New Chore history</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="chore_histories"
+  rows={@streams.chore_histories}
+  row_click={fn {_id, chore_history} -> JS.navigate(~p"/chore_histories/#{chore_history}") end}
+>
+  <:col :let={{_id, chore_history}} label="Completed date">
+    <%= chore_history.completed_date %>
+  </:col>
+  <:col :let={{_id, chore_history}} label="chore_id"><%= chore_history.chore_id %></:col>
+  <:action :let={{_id, chore_history}}>
+    <div class="sr-only">
+      <.link navigate={~p"/chore_histories/#{chore_history}"}>Show</.link>
+    </div>
+    <.link patch={~p"/chore_histories/#{chore_history}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, chore_history}}>
+    <.link phx-click={JS.push("delete", value: %{id: chore_history.id}) |> hide("##{id}")}>
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="chore_history-modal"
+  show
+  on_cancel={JS.patch(~p"/chore_histories")}
+>
+  <.live_component
+    module={HomeviewWeb.ChoreHistoryLive.FormComponent}
+    id={@chore_history.id || :new}
+    title={@page_title}
+    action={@live_action}
+    chore_history={@chore_history}
+    patch={~p"/chore_histories"}
+  />
+</.modal>

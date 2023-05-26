@@ -4,6 +4,41 @@
 
 /* This file is for your main application CSS */
 
-.center-child-svg > svg {
+.center-child-svg>svg {
   margin: 0 auto;
+}
+
+
+.race-back {
+  -webkit-animation: race-left ease-in-out 1s;
+  animation: race-left ease-in-out 1s;
+  transition-duration: 1000ms;
+}
+
+@-webkit-keyframes race-left {
+  0% {
+    transform: scale(1) translateY(-25%) skew(0deg, 15deg);
+  }
+
+  80% {
+    transform: scale(1) translateY(-25%) skew(0deg, -15deg);
+  }
+
+  100% {
+   transform: scaleX(-1) translateY(-25) skew(0deg, 0deg);
+  }
+}
+
+@keyframes race-left{
+  0% {
+    transform: scale(1) translateY(-25%) skew(0deg, 15deg);
+  }
+
+  80% {
+    transform: scale(1) translateY(-25%) skew(0deg, -15deg);
+  }
+
+  100% {
+   transform: scaleX(-1) translateY(-25) skew(0deg, 0deg);
+  }
 }
