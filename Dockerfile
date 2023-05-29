@@ -24,7 +24,6 @@ FROM ${BUILDER_IMAGE} as builder
 RUN apt-get update -y && apt-get install -y build-essential git \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
-RUN apt-get install -y ffmpeg
 
 # prepare build dir
 WORKDIR /app

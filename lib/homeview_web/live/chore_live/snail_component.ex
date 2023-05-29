@@ -39,7 +39,9 @@ defmodule HomeviewWeb.ChoreLive.SnailComponent do
                         "left: -3%;"
 
                       chore.countdown > 0 ->
-                        "left: " <> Float.to_string(Kernel.min(chore.fill_percent - 7, 100)) <> "%;"
+                        "left: " <>
+                          Float.to_string(Kernel.min(Kernel.max(chore.fill_percent - 7, 0.0), 100)) <>
+                          "%;"
 
                       true ->
                         "left: 93%;"
@@ -53,7 +55,8 @@ defmodule HomeviewWeb.ChoreLive.SnailComponent do
                 <div
                   style={
                     if chore.countdown > 0 do
-                      "width: " <> Float.to_string(Kernel.min(chore.fill_percent, 100)) <> "%;
+                      "width: " <>
+                        Float.to_string(Kernel.min(Kernel.max(chore.fill_percent, 0.0), 100)) <> "%;
                 background-color: hsl(" <> Float.to_string(100 - chore.fill_percent) <> ", 100%, 70%)
                 "
                     else

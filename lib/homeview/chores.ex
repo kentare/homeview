@@ -58,13 +58,34 @@ defmodule Homeview.Chores do
     end
   end
 
+  defp weights(chore) do
+    days_left = days_till_next_chore(chore)
+
+    cond do
+      chore.time_interval - days_left == 0 ->
+        100
+
+      days_left == 0 ->
+        0.0
+
+      days_left > 5 && chore.time_interval > 7 ->
+        days_left / chore.time_interval * 1.5
+
+      days_left < 5 ->
+        days_left / chore.time_interval * 0.8
+
+      true ->
+        days_left / chore.time_interval * 1
+    end
+  end
+
   defp fill_percent_for_chore(chore) do
     cond do
       chore.chore_histories == nil ->
-        0
+        100
 
       true ->
-        100 - days_till_next_chore(chore) / chore.time_interval * 100
+        Kernel.max(100 - weights(chore) * 100, 0.0)
     end
   end
 
