@@ -8,6 +8,10 @@ defmodule HomeviewWeb.ChoreLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    if(connected?(socket)) do
+      Chores.subscribe()
+    end
+
     {:ok, stream(socket, :chores, Chores.list_chores()) |> Clock.assign_time()}
   end
 
@@ -38,12 +42,10 @@ defmodule HomeviewWeb.ChoreLive.Index do
     chore = Chores.get_chore!(id)
 
     if(chore.countdown == chore.time_interval) do
-      IO.puts("inside here")
       {:noreply, socket}
     else
       Chores.create_chore_history_by_chore_id(id)
-      chore = Chores.get_chore!(id)
-      {:noreply, stream_insert(socket, :chores, Map.put(chore, :class, "race-back"))}
+      {:noreply, socket}
     end
   end
 
@@ -58,12 +60,16 @@ defmodule HomeviewWeb.ChoreLive.Index do
   @impl true
   def handle_event("delete_last_history", %{"id" => id}, socket) do
     _chore = Chores.delete_latest_chore_history(id)
-    chore = Chores.get_chore!(id)
-    {:noreply, socket |> stream_insert(:chores, chore)}
+    {:noreply, socket}
   end
 
   @impl true
-  def handle_info({HomeviewWeb.ChoreLive.FormComponent, {:saved, chore}}, socket) do
+  def handle_info({:update_chore, chore}, socket) do
     {:noreply, stream_insert(socket, :chores, chore)}
+  end
+
+  @impl true
+  def handle_info({:do_chore, chore}, socket) do
+    {:noreply, stream_insert(socket, :chores, Map.put(chore, :class, "race-back"))}
   end
 end

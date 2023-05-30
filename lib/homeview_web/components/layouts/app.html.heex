@@ -13,6 +13,10 @@
     <.sidebar_link href={~p"/chores"} active={@current_uri == "/chores"}>
       <Heroicons.trophy class="h-full w-full" />
     </.sidebar_link>
+
+    <.sidebar_link href={~p"/groceries"} active={@current_uri == "/groceries"}>
+      <Heroicons.shopping_cart class="h-full w-full" />
+    </.sidebar_link>
   <% end %>
 </header>
 <main class="flex md:pl-20 overflow-x-hidden overflow-y-hidden">
@@ -30,6 +34,10 @@
     <%= if @current_user do %>
       <.sidebar_link href={~p"/chores"} active={@current_uri == "/chores"}>
         <Heroicons.trophy />
+      </.sidebar_link>
+
+      <.sidebar_link href={~p"/groceries"} active={@current_uri == "/groceries"}>
+        <Heroicons.shopping_cart />
       </.sidebar_link>
     <% end %>
   </aside>

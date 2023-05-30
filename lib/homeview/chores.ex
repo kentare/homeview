@@ -8,6 +8,9 @@ defmodule Homeview.Chores do
 
   alias Homeview.Chores.Chore
 
+  @topic inspect(__MODULE__)
+  @pubsub Homeview.PubSub
+
   @doc """
   Returns the list of chores.
 
@@ -17,6 +20,19 @@ defmodule Homeview.Chores do
       [%Chore{}, ...]
 
   """
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(@pubsub, @topic)
+  end
+
+  def broadcast(chore, tag) do
+    Phoenix.PubSub.broadcast(@pubsub, @topic, {tag, chore})
+    chore
+  end
+
+  def broadcast_update(%{:id => id}) do
+    get_chore!(id) |> broadcast(:update_chore)
+  end
 
   def list_chores do
     query =
@@ -151,9 +167,12 @@ defmodule Homeview.Chores do
 
   """
   def create_chore(attrs \\ %{}) do
-    %Chore{}
-    |> Chore.changeset(attrs)
-    |> Repo.insert()
+    {:ok, chore} =
+      %Chore{}
+      |> Chore.changeset(attrs)
+      |> Repo.insert()
+
+    {:ok, broadcast_update(chore)}
   end
 
   @doc """
@@ -169,9 +188,12 @@ defmodule Homeview.Chores do
 
   """
   def update_chore(%Chore{} = chore, attrs) do
-    chore
-    |> Chore.changeset(attrs)
-    |> Repo.update()
+    {:ok, new_chore} =
+      chore
+      |> Chore.changeset(attrs)
+      |> Repo.update()
+
+    {:ok, broadcast_update(new_chore)}
   end
 
   @doc """
@@ -259,6 +281,9 @@ defmodule Homeview.Chores do
     |> Ecto.build_assoc(:chore_histories)
     |> Ecto.Changeset.cast(params, [:completed_date])
     |> Repo.insert!()
+
+    chore = get_chore!(id)
+    broadcast(chore, :do_chore)
   end
 
   @doc """
@@ -298,6 +323,9 @@ defmodule Homeview.Chores do
   def delete_latest_chore_history(chore_id) do
     chore = get_chore!(chore_id)
     Repo.delete(chore.chore_histories)
+
+    IO.inspect(chore)
+    broadcast_update(%{id: chore_id})
   end
 
   @doc """

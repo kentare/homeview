@@ -82,6 +82,8 @@ defmodule HomeviewWeb.Router do
 
       live "/chore_histories/:id", ChoreHistoryLive.Show, :show
       live "/chore_histories/:id/show/edit", ChoreHistoryLive.Show, :edit
+
+      live "/groceries", GroceriesLive
     end
   end
 
