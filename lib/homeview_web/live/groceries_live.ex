@@ -10,8 +10,9 @@ defmodule HomeviewWeb.GroceriesLive do
       Groceries.subscribe()
     end
 
-    {:ok, stream(socket, :groceries, Groceries.list_groceries())}
     add_form = to_form(Groceries.change_grocery(%Grocery{}))
+
+    grocery_search = Groceries.search_groceries("")
 
     groceries =
       Groceries.list_groceries()
@@ -31,6 +32,7 @@ defmodule HomeviewWeb.GroceriesLive do
       assign(socket, add_form: add_form)
       |> stream(:should_buy, groceries.should_buy)
       |> stream(:bought, groceries.bought)
+      |> assign(:grocery_search, grocery_search)
     }
   end
 
@@ -38,7 +40,7 @@ defmodule HomeviewWeb.GroceriesLive do
   def render(assigns) do
     ~H"""
     <div id="handleliste" class="w-full my-1">
-      <.add_row add_form={@add_form} />
+      <.add_row add_form={@add_form} grocery_search={@grocery_search} />
       <h1 class="text-center text-xl mb-2 mt-6">Handleliste</h1>
       
       <div id="non-bought" phx-update="stream" class="flex flex-col gap-2 mt-5">
@@ -64,6 +66,7 @@ defmodule HomeviewWeb.GroceriesLive do
   end
 
   attr(:add_form, :map)
+  attr(:grocery_search, :list)
 
   def add_row(assigns) do
     ~H"""
@@ -73,6 +76,7 @@ defmodule HomeviewWeb.GroceriesLive do
       for={@add_form}
       phx-submit="save"
       phx-change="validate"
+      phx-debounce="400"
     >
       <div class="flex w-full items-top gap-2 self-stretch">
         <div class="self-stretch grow">
@@ -80,6 +84,8 @@ defmodule HomeviewWeb.GroceriesLive do
             field={@add_form[:name]}
             class="flex grow justify-between self-stretch w-full items-center shadow px-4"
             type="text"
+            autocomplete="off"
+            list="grocery_search"
           />
         </div>
         
@@ -88,6 +94,12 @@ defmodule HomeviewWeb.GroceriesLive do
         </button>
       </div>
     </.form>
+
+    <datalist id="grocery_search">
+      <option :for={{name, _count, _} <- @grocery_search} value={name}>
+        <%= name %>
+      </option>
+    </datalist>
     """
   end
 
@@ -155,7 +167,9 @@ defmodule HomeviewWeb.GroceriesLive do
       |> Groceries.change_grocery(grocery_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign_form(socket, changeset)}
+    grocery_search = Groceries.search_groceries(grocery_params["name"])
+
+    {:noreply, assign_form(socket, changeset) |> assign(:grocery_search, grocery_search)}
   end
 
   @impl true

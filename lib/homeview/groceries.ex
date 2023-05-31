@@ -42,6 +42,19 @@ defmodule Homeview.Groceries do
     Repo.all(query)
   end
 
+  def search_groceries(query) do
+    query =
+      Ecto.Query.from(g in Grocery,
+        where: ilike(g.name, ^"%#{query}%"),
+        group_by: g.name,
+        select: {g.name, count("*"), as: :occurrence_count},
+        order_by: [desc: count("*")],
+        limit: 5
+      )
+
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single grocery.
 
