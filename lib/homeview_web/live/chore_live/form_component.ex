@@ -56,33 +56,25 @@ defmodule HomeviewWeb.ChoreLive.FormComponent do
 
   defp save_chore(socket, :edit, chore_params) do
     case Chores.update_chore(socket.assigns.chore, chore_params) do
-      {:ok, chore} ->
+      {:ok, _chore} ->
         {:noreply,
          socket
          |> put_flash(:info, "Chore updated successfully")
          |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
     end
   end
 
   defp save_chore(socket, :new, chore_params) do
     case Chores.create_chore(chore_params) do
-      {:ok, chore} ->
+      {:ok, _chore} ->
         {:noreply,
          socket
          |> put_flash(:info, "Chore created successfully")
          |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
     end
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
   end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

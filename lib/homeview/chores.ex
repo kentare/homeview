@@ -324,7 +324,6 @@ defmodule Homeview.Chores do
     chore = get_chore!(chore_id)
     Repo.delete(chore.chore_histories)
 
-    IO.inspect(chore)
     broadcast_update(%{id: chore_id})
   end
 

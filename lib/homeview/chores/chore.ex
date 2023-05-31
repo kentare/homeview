@@ -3,10 +3,10 @@ defmodule Homeview.Chores.Chore do
   import Ecto.Changeset
 
   schema "chores" do
-    field :iconUrl, :string
-    field :name, :string
-    field :time_interval, :integer
-    has_many :chore_histories, Homeview.Chores.ChoreHistory
+    field(:iconUrl, :string)
+    field(:name, :string)
+    field(:time_interval, :integer)
+    has_many(:chore_histories, Homeview.Chores.ChoreHistory)
 
     timestamps()
   end
