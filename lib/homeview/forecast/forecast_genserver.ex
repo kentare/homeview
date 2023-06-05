@@ -10,7 +10,7 @@ defmodule Homeview.ForecastGenserver do
   end
 
   def init(_) do
-    :timer.send_interval(5000, self(), :update_forecast)
+    :timer.send_interval(1000 * 60 * 60, self(), :update_forecast)
 
     {:ok, update_forecast()}
   end
