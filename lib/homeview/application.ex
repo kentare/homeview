@@ -17,9 +17,10 @@ defmodule Homeview.Application do
       # Start Finch
       {Finch, name: Homeview.Finch},
       # Start the Endpoint (http/https)
-      HomeviewWeb.Endpoint
+      HomeviewWeb.Endpoint,
       # Start a worker by calling: Homeview.Worker.start_link(arg)
       # {Homeview.Worker, arg}
+      {Homeview.ForecastGenserver, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
