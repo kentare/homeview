@@ -3,7 +3,7 @@ defmodule Homeview.ForecastGenserver do
   @topic inspect(__MODULE__)
   @pubsub Homeview.PubSub
 
-  defstruct local: nil, long: nil
+  defstruct local: nil, long: nil, tab: "local"
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
@@ -12,7 +12,9 @@ defmodule Homeview.ForecastGenserver do
   def init(_) do
     :timer.send_interval(1000 * 60 * 60, self(), :update_forecast)
 
-    {:ok, update_forecast()}
+    state = update_forecast(%{tab: "local"})
+
+    {:ok, state}
   end
 
   def handle_call(:get_forecast, _from, state) do
@@ -20,14 +22,24 @@ defmodule Homeview.ForecastGenserver do
   end
 
   def handle_call(:update_forecast, _from, state) do
-    {:reply, update_forecast(), state}
+    new_state = update_forecast(state)
+    {:reply, new_state, new_state}
   end
 
-  defp update_forecast() do
+  # I want to update tab state when the user clicks on the tab
+  def handle_call({:update_tab, tab}, _from, state) do
+    new_state = %{state | tab: tab}
+    {:reply, new_state, new_state}
+  end
+
+  def update_tab(tab) do
+    GenServer.call(__MODULE__, {:update_tab, tab})
+  end
+
+  defp update_forecast(state) do
     local = update_local_forecast()
     long = update_long_forecast()
-
-    forecast = %__MODULE__{local: local, long: long}
+    forecast = %__MODULE__{local: local, long: long, tab: state.tab}
     broadcast(:update_forecast, forecast)
     forecast
   end
@@ -50,11 +62,9 @@ defmodule Homeview.ForecastGenserver do
     Phoenix.PubSub.broadcast(@pubsub, @topic, {tag, forecast})
   end
 
-  def handle_info(:update_forecast, _) do
-    forecast = update_forecast()
-
+  def handle_info(:update_forecast, state) do
+    forecast = update_forecast(state)
     broadcast(:update_forecast, forecast)
-
     {:noreply, forecast}
   end
 

@@ -8,9 +8,16 @@ defmodule HomeviewWeb.WeatherForecastLive do
       ForecastGenserver.subscribe()
     end
 
-    %ForecastGenserver{local: local, long: long} = ForecastGenserver.get_forecast()
+    %ForecastGenserver{local: local, long: long, tab: tab} = ForecastGenserver.get_forecast()
 
-    {:ok, assign(socket, :local, local) |> assign(:long, long) |> assign(:show, :local)}
+    show =
+      if(tab == "local") do
+        :local
+      else
+        :long
+      end
+
+    {:ok, assign(socket, :local, local) |> assign(:long, long) |> assign(:show, show)}
   end
 
   @impl true
@@ -19,11 +26,12 @@ defmodule HomeviewWeb.WeatherForecastLive do
     <div>
       <.show_button show={@show} />
       <div :if={@show == :local} class="px-2 w-full h-full overflow-x-auto center-child-svg">
-        <iframe src="https://www.yr.no/nn/innhald/1-2333502/card.html" class="min-h-[50vh] w-full">
+        <iframe src="https://www.yr.no/nn/innhald/1-2333502/card.html" class="min-h-[80vh] w-full">
         </iframe>
       </div>
       <div :if={@show == :long} class="px-2 w-full h-full overflow-x-auto center-child-svg">
-        <%= raw(@long) %>
+        <iframe src="https://www.yr.no/nn/innhald/1-2333502/table.html" class="min-h-[80vh] w-full">
+        </iframe>
       </div>
     </div>
     """
@@ -37,10 +45,10 @@ defmodule HomeviewWeb.WeatherForecastLive do
     <div class="flex justify-center">
       <div class="flex gap-1 p-1 rounded-md w-64 bg-slate-200">
         <.single_show_button active={@show == :local} on_click="show_local">
-          Show local
+          Kort
         </.single_show_button>
         <.single_show_button active={@show == :long} on_click="show_long">
-          Show long
+          Lang
         </.single_show_button>
       </div>
     </div>
@@ -66,11 +74,13 @@ defmodule HomeviewWeb.WeatherForecastLive do
 
   @impl true
   def handle_event("show_local", _, socket) do
+    ForecastGenserver.update_tab("local")
     {:noreply, assign(socket, :show, :local)}
   end
 
   @impl true
   def handle_event("show_long", _, socket) do
+    ForecastGenserver.update_tab("long")
     {:noreply, assign(socket, :show, :long)}
   end
 
