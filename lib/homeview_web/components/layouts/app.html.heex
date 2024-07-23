@@ -21,12 +21,12 @@
 </header>
 <main class="flex md:pl-20 overflow-x-hidden overflow-y-hidden">
   <aside class="w-20 left-0 drop-shadow-md hidden md:flex flex-col fixed  h-[100vh] bg-slate-50">
-    <.sidebar_link href={~p"/"} active={@current_uri == "/"}>
+    <%!-- <.sidebar_link href={~p"/"} active={@current_uri == "/"}>
       <Heroicons.home class="w-full h-full" />
-    </.sidebar_link>
-    <.sidebar_link href={~p"/transport"} active={@current_uri == "/transport"}>
+    </.sidebar_link> --%>
+    <%!-- <.sidebar_link href={~p"/transport"} active={@current_uri == "/transport"}>
       <.bus_icon />
-    </.sidebar_link>
+    </.sidebar_link> --%>
     <.sidebar_link href={~p"/weather"} active={@current_uri == "/weather"}>
       <Heroicons.sun />
     </.sidebar_link>
@@ -38,6 +38,9 @@
 
       <.sidebar_link href={~p"/groceries"} active={@current_uri == "/groceries"}>
         <Heroicons.shopping_cart />
+      </.sidebar_link>
+      <.sidebar_link href={~p"/wishlist"} active={@current_uri == "/wishlist"}>
+        <Heroicons.gift />
       </.sidebar_link>
     <% end %>
   </aside>
