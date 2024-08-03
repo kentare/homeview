@@ -48,6 +48,7 @@ defmodule HomeviewWeb.Router do
         {HomeviewWeb.SaveRequestUri, :save_request_uri}
       ] do
       live("/", MainLive)
+      live("/photo", PhotoLive)
       live("/transport", TransportLive)
       live("/weather", WeatherForecastLive)
     end

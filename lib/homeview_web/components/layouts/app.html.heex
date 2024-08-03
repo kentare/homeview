@@ -42,11 +42,15 @@
       <.sidebar_link href={~p"/wishlist"} active={@current_uri == "/wishlist"}>
         <Heroicons.gift />
       </.sidebar_link>
+
+      <.sidebar_link href={~p"/photo"} active={@current_uri == "/photo"}>
+        <Heroicons.camera class="h-full w-full" />
+      </.sidebar_link>
     <% end %>
   </aside>
-  <div class="mx-auto md:max-w-2xl xl:max-w-7xl w-full ">
+  <div class="mx-auto md:max-w-2xl xl:max-w-7xl w-full">
     <.flash_group flash={@flash} />
-    <div class="mt-10 w-full px-2">
+    <div class="mt-10 w-full px-2 min-h-screen">
       <.live_component assigns id="clock" module={HomeviewWeb.Clock} />
       <%= @inner_content %>
     </div>
