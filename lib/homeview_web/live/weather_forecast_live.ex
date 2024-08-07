@@ -2,10 +2,13 @@ defmodule HomeviewWeb.WeatherForecastLive do
   use HomeviewWeb, :live_view
   alias Homeview.ForecastGenserver
 
+  @reload_interval :timer.minutes(30)
+
   @impl true
   def mount(_params, _session, socket) do
-    if(connected?(socket)) do
+    if connected?(socket) do
       ForecastGenserver.subscribe()
+      schedule_reload()
     end
 
     %ForecastGenserver{local: local, long: long, tab: tab} = ForecastGenserver.get_forecast()
@@ -17,7 +20,11 @@ defmodule HomeviewWeb.WeatherForecastLive do
         :long
       end
 
-    {:ok, assign(socket, :local, local) |> assign(:long, long) |> assign(:show, show)}
+    {:ok,
+     assign(socket, :local, local)
+     |> assign(:long, long)
+     |> assign(:show, show)
+     |> assign(:reload_key, Ecto.UUID.generate())}
   end
 
   @impl true
@@ -26,11 +33,19 @@ defmodule HomeviewWeb.WeatherForecastLive do
     <div>
       <.show_button show={@show} />
       <div :if={@show == :local} class="px-2 w-full h-full overflow-x-auto center-child-svg">
-        <iframe src="https://www.yr.no/nn/innhald/1-2333502/card.html" class="min-h-[80vh] w-full">
+        <iframe
+          src={"https://www.yr.no/nn/innhald/1-2333502/card.html?key=#{@reload_key}"}
+          class="min-h-[80vh] w-full"
+          key={@reload_key}
+        >
         </iframe>
       </div>
       <div :if={@show == :long} class="px-2 w-full h-full overflow-x-auto center-child-svg">
-        <iframe src="https://www.yr.no/nn/innhald/1-2333502/table.html" class="min-h-[80vh] w-full">
+        <iframe
+          src={"https://www.yr.no/nn/innhald/1-2333502/table.html?key=#{@reload_key}"}
+          class="min-h-[80vh] w-full"
+          key={@reload_key}
+        >
         </iframe>
       </div>
     </div>
@@ -90,6 +105,16 @@ defmodule HomeviewWeb.WeatherForecastLive do
         socket
       ) do
     {:noreply, assign(socket, :local, local) |> assign(:long, long)}
+  end
+
+  @impl true
+  def handle_info(:reload_iframe, socket) do
+    schedule_reload()
+    {:noreply, assign(socket, :reload_key, Ecto.UUID.generate())}
+  end
+
+  defp schedule_reload do
+    Process.send_after(self(), :reload_iframe, @reload_interval)
   end
 
   # defp get_forecast() do
