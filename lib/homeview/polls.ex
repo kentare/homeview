@@ -134,6 +134,17 @@ defmodule Homeview.Polls do
     Repo.all(query)
   end
 
+  @spec get_poll_alternative(integer()) :: %PollAlternative{} | no_return()
+  def get_poll_alternative(id) do
+    Repo.get!(PollAlternative, id)
+  end
+
+  def update_poll_alternative(%PollAlternative{} = poll_alternative, attrs) do
+    poll_alternative
+    |> PollAlternative.changeset(attrs)
+    |> Repo.update()
+  end
+
   def create_poll_answer(attrs \\ %{}) do
     # TODO: Check if user has already voted
 

@@ -66,4 +66,9 @@ config :homeview,
   openai_api_key:
     "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"
 
+config :homeview, Oban,
+  engine: Oban.Engines.Basic,
+  queues: [default: 1, events: 1],
+  repo: Homeview.Repo
+
 import_config "#{config_env()}.exs"

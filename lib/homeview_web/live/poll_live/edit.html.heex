@@ -65,16 +65,37 @@
         <%= for alternative <- @poll.poll_alternatives do %>
           <%= if alternative.creator.user_id == @current_user_id do %>
             <li class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
-              <img
-                src={alternative.image_url}
-                alt="Bilde"
-                class="w-16 h-16 hover:w-[400px] hover:h-[400px] transition-all duration-300"
-              /> <span class="flex-grow"><%= alternative.extra_text %></span>
+              <%= case alternative.status do %>
+                <% "success" -> %>
+                  <img
+                    src={alternative.image_url}
+                    alt="Bilde"
+                    class="w-16 h-16 hover:w-[400px] hover:h-[400px] transition-all duration-300"
+                  />
+                <% "generating" -> %>
+                  <div class="w-16 h-16 bg-gray-200 flex items-center justify-center">
+                    <span class="text-yellow-600 animate-spin">⟳</span>
+                  </div>
+                <% "failed" -> %>
+                  <div class="w-16 h-16 bg-gray-200 flex items-center justify-center">
+                    <span class="text-red-600">✗</span>
+                  </div>
+                <% _ -> %>
+                  <div class="w-16 h-16 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-600">?</span>
+                  </div>
+              <% end %>
+               <span class="flex-grow"><%= alternative.extra_text %></span>
               <div class="flex items-center gap-2">
-                <%= if alternative.is_ready do %>
-                  <span class="text-green-600">✓</span>
-                <% else %>
-                  <span class="text-yellow-600 animate-spin">⟳</span>
+                <%= case alternative.status do %>
+                  <% "success" -> %>
+                    <span class="text-green-600">✓</span>
+                  <% "generating" -> %>
+                    <span class="text-yellow-600 animate-spin">⟳</span>
+                  <% "failed" -> %>
+                    <span class="text-red-600">✗</span>
+                  <% _ -> %>
+                    <span class="text-gray-600">?</span>
                 <% end %>
                 
                 <%= if !@poll.ready_to_vote do %>

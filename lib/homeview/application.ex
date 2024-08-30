@@ -20,7 +20,8 @@ defmodule Homeview.Application do
       HomeviewWeb.Endpoint,
       # Start a worker by calling: Homeview.Worker.start_link(arg)
       # {Homeview.Worker, arg}
-      {Homeview.ForecastGenserver, []}
+      {Homeview.ForecastGenserver, []},
+      {Oban, Application.fetch_env!(:homeview, Oban)}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

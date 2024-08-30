@@ -8,6 +8,10 @@ defmodule HomeviewWeb.PollLive.Edit do
     poll = Polls.get_poll!(id)
     changeset = Polls.change_poll(poll)
 
+    if(connected?(socket)) do
+      Homeview.GeneratePubsub.subscribe()
+    end
+
     socket = socket |> cookie_assigns(session)
 
     alternative_changeset =
@@ -22,9 +26,15 @@ defmodule HomeviewWeb.PollLive.Edit do
      |> assign(new_alternative: to_form(alternative_changeset))}
   end
 
+  @impl true
+  def handle_info({:poll_updated}, socket) do
+    poll = Polls.get_poll!(socket.assigns.poll.id)
+    {:noreply, assign(socket, poll: poll)}
+  end
+
   def handle_event("validate_alternative", %{"poll_alternative" => alternative_params}, socket) do
     alternative_params = Map.put(alternative_params, "poll_id", socket.assigns.poll.id)
-    alternative_params = Map.put(alternative_params, "is_ready", true)
+    alternative_params = Map.put(alternative_params, "is_ready", false)
 
     new_alternative =
       Polls.change_poll_alternative(%PollAlternative{}, alternative_params)
@@ -37,16 +47,12 @@ defmodule HomeviewWeb.PollLive.Edit do
   def handle_event("add_alternative", %{"poll_alternative" => alternative_params}, socket) do
     alternative_params = Map.put(alternative_params, "poll_id", socket.assigns.poll.id)
     alternative_params = Map.put(alternative_params, "is_ready", true)
-
-    alternative_params =
-      Map.put(
-        alternative_params,
-        "image_url",
-        Homeview.OpenAI.generate_image(alternative_params["text"])
-      )
+    alternative_params = Map.put(alternative_params, "status", "generating")
 
     case Polls.create_poll_alternative(alternative_params) do
-      {:ok, _alternative} ->
+      {:ok, alternative} ->
+        %{"id" => alternative.id} |> Homeview.GenerateImage.new() |> Oban.insert()
+
         {:noreply,
          socket
          |> put_flash(:info, "Alternative added successfully")

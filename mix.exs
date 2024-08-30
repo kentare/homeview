@@ -53,7 +53,8 @@ defmodule Homeview.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:req, "~> 0.3.0"},
       {:heroicons, "~> 0.5.2"},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:oban, "~> 2.18"}
     ]
   end
 

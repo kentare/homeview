@@ -155,6 +155,7 @@ defmodule Homeview.OpenAI do
     )
   end
 
+  @spec extract_image_data(Req.Response.t()) :: %{data: String.t(), prompt: String.t()}
   defp extract_image_data(response) do
     data =
       response.body
@@ -162,9 +163,13 @@ defmodule Homeview.OpenAI do
       |> List.first()
       |> Map.get("b64_json")
 
-    "data:image/jpeg;charset=utf-8;base64," <> data
+    %{
+      data: "data:image/jpeg;charset=utf-8;base64," <> data,
+      prompt: response.body |> Map.get("revised_prompt")
+    }
   end
 
+  @spec generate_image(String.t()) :: %{data: String.t(), prompt: String.t()}
   def generate_image(prompt) do
     prompt
     |> generate_image_prompt()
