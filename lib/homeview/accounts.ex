@@ -6,7 +6,7 @@ defmodule Homeview.Accounts do
   import Ecto.Query, warn: false
   alias Homeview.Repo
 
-  alias Homeview.Accounts.{User, UserToken, UserNotifier}
+  alias Homeview.Accounts.{User, UserToken, UserNotifier, AnonymousUser}
 
   ## Database getters
 
@@ -348,6 +348,42 @@ defmodule Homeview.Accounts do
     |> case do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
+    end
+  end
+
+  def change_anonymous_user(user, attrs \\ %{}) do
+    AnonymousUser.changeset(user, attrs)
+  end
+
+  def get_or_create_anonymous_user(user_id) do
+    case Repo.get_by(AnonymousUser, user_id: user_id) do
+      nil ->
+        %AnonymousUser{user_id: user_id}
+        |> AnonymousUser.changeset(%{})
+        |> Repo.insert()
+
+      user ->
+        {:ok, user}
+    end
+  end
+
+  def update_anonymous_user_name(user_id, name) do
+    get_or_create_anonymous_user(user_id)
+    |> case do
+      {:ok, user} ->
+        user
+        |> AnonymousUser.changeset(%{name: name})
+        |> Repo.update()
+
+      error ->
+        error
+    end
+  end
+
+  def get_anonymous_user_name(user_id) do
+    case Repo.get_by(AnonymousUser, user_id: user_id) do
+      nil -> nil
+      user -> user.name
     end
   end
 end

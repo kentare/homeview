@@ -55,6 +55,13 @@ defmodule HomeviewWeb do
         layout: {HomeviewWeb.Layouts, :app}
 
       unquote(html_helpers())
+
+      defp cookie_assigns(socket, session) do
+        socket =
+          socket
+          |> assign(:current_user_id, session["user_id"])
+          |> assign(:current_name, Homeview.Accounts.get_anonymous_user_name(session["user_id"]))
+      end
     end
   end
 

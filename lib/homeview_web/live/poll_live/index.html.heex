@@ -1,0 +1,94 @@
+<div class="max-w-4xl mx-auto">
+  <.form for={@user_form} phx-change="change_name" class="flex gap-1 items-center">
+    Heisann <.input field={@user_form[:name]} type="text" phx-debounce="blur" />
+  </.form>
+  <h1 class="text-3xl font-bold mb-8">Bildepålls</h1>
+
+  <div class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Lag ny påll</h2>
+    <.form for={@new_poll} phx-submit="save" phx-change="validate" phx-debounce="1000">
+      <div class="flex gap-4">
+        <div class="flex-grow">
+          <.input field={@new_poll[:text]} type="text" placeholder="Kva skal pållen spørje om?" />
+          <.input
+            field={@new_poll[:created_by_id]}
+            type="text"
+            readonly
+            class="bg-gray-100 hidden"
+            placeholder="Laga av"
+          />
+        </div>
+        <div class="">
+          <.button type="submit" class="h-full">Lag påll</.button>
+        </div>
+      </div>
+    </.form>
+  </div>
+
+  <div class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Påll i gang</h2>
+    <%= if Enum.empty?(@ready_polls) do %>
+      <p class="text-gray-500">Ingen påll er i gong.</p>
+    <% else %>
+      <ul class="space-y-4">
+        <%= for poll <- @ready_polls do %>
+          <li class="bg-white shadow rounded-lg p-4 flex justify-between">
+            <div>
+              <.link navigate={~p"/polls/#{poll.id}/vote"} class="text-blue-600 hover:underline">
+                <%= poll.text %>
+              </.link>
+              <span class="text-gray-500 text-sm">
+                Lagd av <%= poll.creator.name %>
+              </span>
+            </div>
+
+            <div>
+              <%= if Enum.any?(poll.poll_answers, fn answer -> answer.answered_by_id == @current_user_id end) do %>
+                <span class="text-green-600">Du har røysta</span>
+              <% else %>
+                <span class="text-red-600">Du har ikkje røysta</span>
+              <% end %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+  <div>
+    <h2 class="text-2xl font-semibold mb-4">Påll klar til å få lagt til val</h2>
+    <%= if Enum.empty?(@not_ready_polls) do %>
+      <p class="text-gray-500">Ingen påll er i gang.</p>
+    <% else %>
+      <ul class="space-y-4">
+        <%= for poll <- @not_ready_polls do %>
+          <li class="bg-white shadow rounded-lg p-4 flex justify-between">
+            <.link navigate={~p"/polls/#{poll.id}/edit"} class="text-blue-600 hover:underline">
+              <%= poll.text %>
+            </.link>
+            <.button phx-click="delete_poll" phx-value-id={poll.id}>Slett</.button>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+</div>
+
+<.modal :if={@live_action in [:new, :edit]} id="poll-modal" show on_cancel={JS.patch(~p"/polls")}>
+  <.live_component
+    module={HomeviewWeb.PollLive.FormComponent}
+    id={@poll.id || :new}
+    title={@page_title}
+    action={@live_action}
+    poll={@poll}
+    patch={~p"/polls"}
+  />
+</.modal>
+
+<%= if !@current_name do %>
+  <.live_component
+    module={HomeviewWeb.NameModalComponent}
+    current_user_id={@current_user_id}
+    id="name_modal"
+  />
+<% end %>

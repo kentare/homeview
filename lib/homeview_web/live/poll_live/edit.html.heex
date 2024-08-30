@@ -1,0 +1,112 @@
+<div class="max-w-4xl mx-auto">
+  <section class="flex flex-col gap-2 mb-8">
+    <a href={~p"/polls"} class="text-gray-500 hover:text-gray-700">
+      <.icon name="hero-arrow-left" class="w-4 h-4" /> <span>Tilbake til pållar</span>
+    </a>
+    
+    <h1 class="text-3xl font-bold"><%= @poll.text %></h1>
+     <span class="text-gray-500">Laga av <%= @poll.creator.name %></span>
+    <span class="text-gray-500">
+      Det er <%= length(@poll.poll_alternatives) %> val lagt til (<%= length(
+        @poll.poll_alternatives
+      ) -
+        length(@poll.poll_alternatives |> Enum.filter(&(&1.created_by_id == @current_user_id))) %> er skjult)
+    </span>
+  </section>
+  
+  <div class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Legg til val</h2>
+    
+    <.form for={@new_alternative} phx-change="validate_alternative" phx-submit="add_alternative">
+      <div class="flex gap-4">
+        <div class="flex-grow">
+          <.input field={@new_alternative[:poll_id]} type="hidden" />
+          <.input
+            field={@new_alternative[:text]}
+            type="text"
+            placeholder="Promp for biletgenerering"
+          />
+          <.input
+            field={@new_alternative[:extra_text]}
+            type="text"
+            placeholder="Ekstra tekst (Vises bare i resultat)"
+          />
+          <.input
+            field={@new_alternative[:created_by_id]}
+            class="bg-gray-100 hidden"
+            readonly
+            type="text"
+            placeholder="Laga av"
+          />
+        </div>
+        
+        <div>
+          <.button
+            disabled={@poll.ready_to_vote || !@new_alternative.source.valid?}
+            class="h-full disabled:bg-gray-500 disabled:text-gray-300"
+            type="submit"
+          >
+            Legg til val
+          </.button>
+        </div>
+      </div>
+    </.form>
+  </div>
+  
+  <div class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">
+      Dine tillagde val (du kan ikkje sjå kva som er lagde av andre)
+    </h2>
+    
+    <%= if Enum.empty?(@poll.poll_alternatives) do %>
+      <p class="text-gray-500">Ingen val er lagde til enno.</p>
+    <% else %>
+      <ul class="space-y-4">
+        <%= for alternative <- @poll.poll_alternatives do %>
+          <%= if alternative.creator.user_id == @current_user_id do %>
+            <li class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
+              <img
+                src={alternative.image_url}
+                alt="Bilde"
+                class="w-16 h-16 hover:w-[400px] hover:h-[400px] transition-all duration-300"
+              /> <span class="flex-grow"><%= alternative.extra_text %></span>
+              <div class="flex items-center gap-2">
+                <%= if alternative.is_ready do %>
+                  <span class="text-green-600">✓</span>
+                <% else %>
+                  <span class="text-yellow-600 animate-spin">⟳</span>
+                <% end %>
+                
+                <%= if !@poll.ready_to_vote do %>
+                  <.button phx-click="delete_alternative" phx-value-id={alternative.id}>
+                    Slett
+                  </.button>
+                <% end %>
+              </div>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+  
+  <div>
+    <%= if !@poll.ready_to_vote && Enum.all?(@poll.poll_alternatives, & &1.is_ready) && length(@poll.poll_alternatives) > 0 do %>
+      <.button phx-click="toggle_ready">Set påll klar for røysting</.button>
+    <% end %>
+    
+    <%= if @poll.ready_to_vote do %>
+      <.button class="bg-red-500 text-white" phx-click="toggle_ready">
+        Set påll ikkje klar for røysting
+      </.button>
+    <% end %>
+  </div>
+</div>
+
+<%= if !assigns[:current_name] do %>
+  <.live_component
+    module={HomeviewWeb.NameModalComponent}
+    current_user_id={@current_user_id}
+    id="name_modal"
+  />
+<% end %>

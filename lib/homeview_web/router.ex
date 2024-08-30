@@ -11,6 +11,7 @@ defmodule HomeviewWeb.Router do
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
     plug(:fetch_current_user)
+    plug(HomeviewWeb.UserIdentification)
   end
 
   pipeline :api do
@@ -103,6 +104,12 @@ defmodule HomeviewWeb.Router do
       live("/users/reset_password", UserForgotPasswordLive, :new)
       live("/users/reset_password/:token", UserResetPasswordLive, :edit)
       # live "/users/register", UserRegistrationLive, :new
+
+      live "/polls", PollLive.Index, :index
+      live "/polls/new", PollLive.Index, :new
+      live "/polls/:id/edit", PollLive.Edit, :edit
+      live "/polls/:id/vote", PollLive.Vote, :vote
+      live "/polls/:id/results", PollLive.Results, :results
     end
 
     post("/users/log_in", UserSessionController, :create)
