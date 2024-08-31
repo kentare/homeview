@@ -38,7 +38,7 @@ defmodule HomeviewWeb.PollLive.Index do
       {:ok, _poll} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Poll created successfully")
+         |> put_flash(:info, "Påll oppretta")
          |> assign(new_poll: to_form(Polls.change_poll(%Poll{})))
          |> assign(not_ready_polls: Polls.list_not_ready_polls())}
 
@@ -121,7 +121,7 @@ defmodule HomeviewWeb.PollLive.Index do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Name changed successfully")
+         |> put_flash(:info, "Navn endra")
          |> assign(current_name: name)
          |> assign(
            user_form:

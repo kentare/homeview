@@ -1,8 +1,9 @@
 <div class="max-w-4xl mx-auto">
-  <.form for={@user_form} phx-change="change_name" class="flex gap-1 items-center">
-    Heisann <.input field={@user_form[:name]} type="text" phx-debounce="blur" />
-  </.form>
   <h1 class="text-3xl font-bold mb-8">Bildepålls</h1>
+  <.form for={@user_form} phx-change="change_name" class="flex gap-2 items-center mb-8">
+    <span class="mt-2">Heisann</span>
+    <.input field={@user_form[:name]} type="text" phx-debounce="blur" />
+  </.form>
 
   <div class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Lag ny påll</h2>
@@ -27,6 +28,9 @@
 
   <div class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Påll i gang</h2>
+    <p class="text-gray-500">
+      Her er påll som er klar for røysting.
+    </p>
     <%= if Enum.empty?(@ready_polls) do %>
       <p class="text-gray-500">Ingen påll er i gong.</p>
     <% else %>
@@ -57,6 +61,9 @@
 
   <div>
     <h2 class="text-2xl font-semibold mb-4">Påll klar til å få lagt til val</h2>
+    <p class="text-gray-500">
+      Her er det åpent for å legge til val alternativer.
+    </p>
     <%= if Enum.empty?(@not_ready_polls) do %>
       <p class="text-gray-500">Ingen påll er i gang.</p>
     <% else %>

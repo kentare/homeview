@@ -17,6 +17,10 @@
   <div class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Legg til val</h2>
     
+    <span class="text-sm text-gray-600 italic">
+      Hint: Vurder å søkje etter ein filmtittel, finne plått på Wikipedia, og lime inn heile samandraget i plotfeltet.
+    </span>
+    
     <.form for={@new_alternative} phx-change="validate_alternative" phx-submit="add_alternative">
       <div class="flex gap-4">
         <div class="flex-grow">
@@ -24,12 +28,12 @@
           <.input
             field={@new_alternative[:text]}
             type="text"
-            placeholder="Promp for biletgenerering"
+            placeholder="Plot(Promp) brukt til biletgenerering"
           />
           <.input
             field={@new_alternative[:extra_text]}
             type="text"
-            placeholder="Ekstra tekst (Vises bare i resultat)"
+            placeholder="Tekst som vises i resultat (f.eks filmnavn)"
           />
           <.input
             field={@new_alternative[:created_by_id]}
@@ -85,7 +89,47 @@
                     <span class="text-gray-600">?</span>
                   </div>
               <% end %>
-               <span class="flex-grow"><%= alternative.extra_text %></span>
+              
+              <%= if alternative.status == "generating" do %>
+                <span class="text-gray-500">
+                  Generer bilete.. venligst vent
+                </span>
+              <% else %>
+                <details class="flex-grow cursor-pointer bg-gray-100 rounded-lg p-4 transition-all duration-300 hover:bg-gray-200">
+                  <summary class="font-semibold text-lg  mb-2">
+                    Val informasjon
+                  </summary>
+                  
+                  <div class="space-y-4 mt-4">
+                    <details class="bg-white rounded p-3 shadow-sm">
+                      <summary class="font-medium text-gray-700 hover:text-blue-500 transition-colors duration-200">
+                        Plot
+                      </summary>
+                      
+                      <p class="mt-2 text-gray-600 leading-relaxed"><%= alternative.text %></p>
+                    </details>
+                    
+                    <details class="bg-white rounded p-3 shadow-sm">
+                      <summary class="font-medium text-gray-700 hover:text-blue-500 transition-colors duration-200">
+                        Prompt
+                      </summary>
+                      
+                      <p class="mt-2 text-gray-600 leading-relaxed"><%= alternative.prompt %></p>
+                    </details>
+                    
+                    <details class="bg-white rounded p-3 shadow-sm">
+                      <summary class="font-medium text-gray-700 hover:text-blue-500 transition-colors duration-200">
+                        Ekstra tekst
+                      </summary>
+                      
+                      <p class="mt-2 text-gray-600 leading-relaxed">
+                        <%= alternative.extra_text %>
+                      </p>
+                    </details>
+                  </div>
+                </details>
+              <% end %>
+              
               <div class="flex items-center gap-2">
                 <%= case alternative.status do %>
                   <% "success" -> %>

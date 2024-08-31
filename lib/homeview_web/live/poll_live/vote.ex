@@ -32,11 +32,11 @@ defmodule HomeviewWeb.PollLive.Vote do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Vote recorded successfully")
+         |> put_flash(:info, "Røyst lagra")
          |> assign(has_voted: true, vote: vote)}
 
       {:error, _changeset} ->
-        {:noreply, put_flash(socket, :error, "Failed to record vote")}
+        {:noreply, put_flash(socket, :error, "Klarte ikkje å lagra røysta")}
     end
   end
 end

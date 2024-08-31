@@ -4,8 +4,16 @@
   <p class="text-xl mb-8">Totalt antal røyster: <%= @total_votes %></p>
   
   <div class="grid grid-cols-2 gap-4">
-    <%= for {alternative, count, percentage} <- @results do %>
-      <div class="w-full bg-white shadow rounded-lg p-4 text-left aspect-square relative">
+    <%= for {{alternative, count, percentage}, index} <- Enum.with_index(@results) do %>
+      <div class={[
+        "w-full bg-white shadow rounded-lg p-4 text-left aspect-square relative hover:scale-[2.05] transition duration-200",
+        case index do
+          0 -> "origin-top-left"
+          1 -> "origin-top-right"
+          _ -> if rem(index, 2) == 0, do: "origin-bottom-left", else: "origin-bottom-right"
+        end,
+        "hover:z-50"
+      ]}>
         <img src={alternative.image_url} class="w-full h-full object-cover absolute inset-0" />
         <div class="absolute inset-0 bg-black bg-opacity-50 hover:bg-opacity-0 transition duration-200 flex flex-col justify-between p-4">
           <%= if {alternative, count, percentage} == @winner do %>

@@ -116,8 +116,6 @@ defmodule Homeview.OpenAI do
         headers: [{"Authorization", "Bearer #{@openai_api_key}"}]
       )
 
-    dbg(response)
-
     extract_prompt(response)
   end
 
@@ -161,11 +159,15 @@ defmodule Homeview.OpenAI do
       response.body
       |> Map.get("data")
       |> List.first()
-      |> Map.get("b64_json")
+
+    base64_data = data |> Map.get("b64_json")
+    prompt = data |> Map.get("revised_prompt")
+
+    dbg(prompt)
 
     %{
-      data: "data:image/jpeg;charset=utf-8;base64," <> data,
-      prompt: response.body |> Map.get("revised_prompt")
+      data: "data:image/jpeg;charset=utf-8;base64," <> base64_data,
+      prompt: prompt
     }
   end
 

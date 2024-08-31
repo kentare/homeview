@@ -7,6 +7,7 @@ defmodule HomeviewWeb.PollLive.Edit do
   def mount(%{"id" => id}, session, socket) do
     poll = Polls.get_poll!(id)
     changeset = Polls.change_poll(poll)
+    dbg(poll)
 
     if(connected?(socket)) do
       Homeview.GeneratePubsub.subscribe()
@@ -55,7 +56,7 @@ defmodule HomeviewWeb.PollLive.Edit do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Alternative added successfully")
+         |> put_flash(:info, "Val lagt til. Generer bilde...")
          |> assign(
            new_alternative:
              to_form(
@@ -90,7 +91,7 @@ defmodule HomeviewWeb.PollLive.Edit do
          |> assign(poll: updated_poll)}
 
       {:error, _changeset} ->
-        {:noreply, put_flash(socket, :error, "Failed to set poll as ready")}
+        {:noreply, put_flash(socket, :error, "Klarte ikkje å sette påll som klar for røysting")}
     end
   end
 
