@@ -1,19 +1,17 @@
 <div class="max-w-4xl mx-auto">
   <h1 class="text-3xl font-bold mb-8">Bildepålls</h1>
+  
   <.form for={@user_form} phx-change="change_name" class="flex gap-2 items-center mb-8">
     <span class="mt-2">Heisann</span>
     <.input field={@user_form[:name]} type="text" phx-debounce="blur" />
   </.form>
-
+  
   <div class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Lag ny påll</h2>
+    
     <.form for={@new_poll} phx-submit="save" phx-change="validate" phx-debounce="1000">
       <div class="flex gap-4">
-<<<<<<< Updated upstream
-        <div class="flex-grow">
-=======
         <div class="flex-grow flex flex-col gap-2">
->>>>>>> Stashed changes
           <.input field={@new_poll[:text]} type="text" placeholder="Kva skal pållen spørje om?" />
           <.input
             field={@new_poll[:created_by_id]}
@@ -22,27 +20,27 @@
             class="bg-gray-100 hidden"
             placeholder="Laga av"
           />
-<<<<<<< Updated upstream
-=======
           <.input
             label="Skjul bilde når alternativ lages"
             field={@new_poll[:hide_alternative_image_on_creation]}
             type="checkbox"
           />
->>>>>>> Stashed changes
         </div>
+        
         <div class="">
           <.button type="submit" class="h-full">Lag påll</.button>
         </div>
       </div>
     </.form>
   </div>
-
+  
   <div class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Påll i gang</h2>
+    
     <p class="text-gray-500">
       Her er påll som er klar for røysting.
     </p>
+    
     <%= if Enum.empty?(@ready_polls) do %>
       <p class="text-gray-500">Ingen påll er i gong.</p>
     <% else %>
@@ -53,11 +51,12 @@
               <.link navigate={~p"/polls/#{poll.id}/vote"} class="text-blue-600 hover:underline">
                 <%= poll.text %>
               </.link>
+              
               <span class="text-gray-500 text-sm">
                 Lagd av <%= poll.creator.name %>
               </span>
             </div>
-
+            
             <div>
               <%= if Enum.any?(poll.poll_answers, fn answer -> answer.answered_by_id == @current_user_id end) do %>
                 <span class="text-green-600">Du har røysta</span>
@@ -70,12 +69,14 @@
       </ul>
     <% end %>
   </div>
-
+  
   <div>
     <h2 class="text-2xl font-semibold mb-4">Påll klar til å få lagt til val</h2>
+    
     <p class="text-gray-500">
       Her er det åpent for å legge til val alternativer.
     </p>
+    
     <%= if Enum.empty?(@not_ready_polls) do %>
       <p class="text-gray-500">Ingen påll er i gang.</p>
     <% else %>
@@ -85,6 +86,7 @@
             <.link navigate={~p"/polls/#{poll.id}/edit"} class="text-blue-600 hover:underline">
               <%= poll.text %>
             </.link>
+            
             <.button phx-click="delete_poll" phx-value-id={poll.id}>Slett</.button>
           </li>
         <% end %>

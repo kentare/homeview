@@ -5,10 +5,7 @@ defmodule Homeview.Polls.Poll do
   schema "polls" do
     field :text, :string
     field :ready_to_vote, :boolean, default: false
-<<<<<<< Updated upstream
-=======
     field :hide_alternative_image_on_creation, :boolean, default: false
->>>>>>> Stashed changes
 
     belongs_to :creator, Homeview.Accounts.AnonymousUser,
       foreign_key: :created_by_id,
@@ -24,11 +21,7 @@ defmodule Homeview.Polls.Poll do
   @doc false
   def changeset(poll, attrs) do
     poll
-<<<<<<< Updated upstream
-    |> cast(attrs, [:text, :ready_to_vote, :created_by_id])
-=======
     |> cast(attrs, [:text, :ready_to_vote, :created_by_id, :hide_alternative_image_on_creation])
->>>>>>> Stashed changes
     |> validate_required([:text, :created_by_id])
     |> foreign_key_constraint(:created_by_id)
   end
