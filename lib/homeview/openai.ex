@@ -1,7 +1,7 @@
 defmodule Homeview.OpenAI do
   # Import the configuration
   # Get the OpenAI API key from the configuration
-  @openai_api_key Application.compile_env!(:homeview, :openai_api_key)
+  @openai_api_key Application.get_env(:homeview, :openai_api_key)
 
   @system_prompt "This GPT generates prompts that will be used with DALL-E based on user-provided movie plots or descriptive text. It focuses on creating the most relevant and impactful visual representation possible while adhering to OpenAI'\''s content policies. If the provided plot contains restricted content, the GPT will automatically filter those parts and generate an image based on the allowable details. The goal is to ensure that users receive a visually accurate and engaging image without unnecessary restrictions. The returned image should be directly aligned with the allowable aspects of the provided description. Write your output in json with a single key called \"prompt\"."
 

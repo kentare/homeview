@@ -77,3 +77,7 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+config :homeview,
+  openai_api_key:
+    "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"

@@ -62,9 +62,6 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 
-config :homeview,
-  openai_api_key:
-    "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"
 
 config :homeview, Oban,
   engine: Oban.Engines.Basic,

@@ -3,28 +3,28 @@
     <a href={~p"/polls"} class="text-gray-500 hover:text-gray-700">
       <.icon name="hero-arrow-left" class="w-4 h-4" /> <span>Tilbake til pållar</span>
     </a>
-    
+
     <h1 class="text-3xl font-bold"><%= @poll.text %></h1>
-     <span class="text-gray-500">Laga av <%= @poll.creator.name %></span>
+    <span class="text-gray-500">Laga av <%= @poll.creator.name %></span>
     <span class="text-gray-500">
       Det er <%= length(@poll.poll_alternatives) %> val lagt til (<%= length(
         @poll.poll_alternatives
       ) -
         length(@poll.poll_alternatives |> Enum.filter(&(&1.created_by_id == @current_user_id))) %> er skjult)
     </span>
-    
+
     <span :if={@poll.hide_alternative_image_on_creation} class="text-gray-500 italic">
       Du får ikkje sjå bilde som er generert for dine alternativ på denne pållen.
     </span>
   </section>
-  
+
   <div class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Legg til val</h2>
-    
+
     <span class="text-sm text-gray-600 italic">
       Hint: Vurder å søkje etter ein filmtittel, finne plått på Wikipedia, og lime inn heile samandraget i plotfeltet.
     </span>
-    
+
     <.form for={@new_alternative} phx-change="validate_alternative" phx-submit="add_alternative">
       <div class="flex gap-4">
         <div class="flex-grow">
@@ -47,7 +47,7 @@
             placeholder="Laga av"
           />
         </div>
-        
+
         <div>
           <.button
             disabled={@poll.ready_to_vote || !@new_alternative.source.valid?}
@@ -60,12 +60,12 @@
       </div>
     </.form>
   </div>
-  
+
   <div class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">
       Dine tillagde val (du kan ikkje sjå kva som er lagde av andre)
     </h2>
-    
+
     <%= if Enum.empty?(@poll.poll_alternatives) do %>
       <p class="text-gray-500">Ingen val er lagde til enno.</p>
     <% else %>
@@ -75,14 +75,6 @@
             <li class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
               <%= case alternative.status do %>
                 <% "success" -> %>
-                  <<<<<<<
-                    Updated
-                    upstream
-                    <img
-                    src={alternative.image_url}
-                    alt="Bilde"
-                    class="w-16 h-16 hover:w-[400px] hover:h-[400px] transition-all duration-300"
-                  /> =======
                   <%= if @poll.hide_alternative_image_on_creation do %>
                     <div class="h-16 p-1 bg-gray-200 max-w-24 flex items-center justify-center">
                       <san class="text-gray-600 p-1">
@@ -96,7 +88,6 @@
                       class="w-16 h-16 hover:w-[400px] hover:h-[400px] transition-all duration-300"
                     />
                   <% end %>
-                  >>>>>>> Stashed changes
                 <% "generating" -> %>
                   <div class="w-16 h-16 bg-gray-200 flex items-center justify-center">
                     <span class="text-yellow-600 animate-spin">⟳</span>
@@ -110,7 +101,7 @@
                     <span class="text-gray-600">?</span>
                   </div>
               <% end %>
-              
+
               <%= if alternative.status == "generating" do %>
                 <span class="text-gray-500">
                   Generer bilete.. venligst vent
@@ -120,29 +111,29 @@
                   <summary class="font-semibold text-lg  mb-2">
                     Val informasjon
                   </summary>
-                  
+
                   <div class="space-y-4 mt-4">
                     <details class="bg-white rounded p-3 shadow-sm">
                       <summary class="font-medium text-gray-700 hover:text-blue-500 transition-colors duration-200">
                         Plot
                       </summary>
-                      
+
                       <p class="mt-2 text-gray-600 leading-relaxed"><%= alternative.text %></p>
                     </details>
-                    
+
                     <details class="bg-white rounded p-3 shadow-sm">
                       <summary class="font-medium text-gray-700 hover:text-blue-500 transition-colors duration-200">
                         Prompt
                       </summary>
-                      
+
                       <p class="mt-2 text-gray-600 leading-relaxed"><%= alternative.prompt %></p>
                     </details>
-                    
+
                     <details class="bg-white rounded p-3 shadow-sm">
                       <summary class="font-medium text-gray-700 hover:text-blue-500 transition-colors duration-200">
                         Ekstra tekst
                       </summary>
-                      
+
                       <p class="mt-2 text-gray-600 leading-relaxed">
                         <%= alternative.extra_text %>
                       </p>
@@ -150,7 +141,7 @@
                   </div>
                 </details>
               <% end %>
-              
+
               <div class="flex items-center gap-2">
                 <%= case alternative.status do %>
                   <% "success" -> %>
@@ -162,7 +153,7 @@
                   <% _ -> %>
                     <span class="text-gray-600">?</span>
                 <% end %>
-                
+
                 <%= if !@poll.ready_to_vote do %>
                   <.button phx-click="delete_alternative" phx-value-id={alternative.id}>
                     Slett
@@ -175,12 +166,12 @@
       </ul>
     <% end %>
   </div>
-  
+
   <div>
     <%= if !@poll.ready_to_vote && Enum.all?(@poll.poll_alternatives, & &1.is_ready) && length(@poll.poll_alternatives) > 0 do %>
       <.button phx-click="toggle_ready">Set påll klar for røysting</.button>
     <% end %>
-    
+
     <%= if @poll.ready_to_vote do %>
       <.button class="bg-red-500 text-white" phx-click="toggle_ready">
         Set påll ikkje klar for røysting
